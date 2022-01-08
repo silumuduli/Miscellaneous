@@ -39,3 +39,13 @@ summarystat=function(x,type="latex"){
   smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = type, title="Summary Statistics",digits=2)
   smsst
 }
+
+# Correlation Plot
+corplot=function(x){
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(stargazer,xtable,corrplot)
+cor_5 <- rcorr(as.matrix(x))
+M <- cor_5$r
+p_mat <- cor_5$P
+corrplot(cor(x), method = "color", type = "lower",addCoef.col = "black", tl.col = "darkblue", diag = FALSE,p.mat = p_mat, sig.level = 0.05, insig = "blank")
+}
