@@ -53,8 +53,8 @@ summarystat=function(x,type="latex"){
             `Max.` = max(value,na.rm = T))
 
 
-foo <- xtable(summary, digits = 2) %>%
-  print(type = "latex",
+foo <- xtable(summary, digits = 2, caption = 'Summary Statistics') %>%
+  print(type = "latex", caption.placement = 'top',
         html.table.attributes = "",
         include.rownames = FALSE,
         format.args = list(big.mark = ","))
