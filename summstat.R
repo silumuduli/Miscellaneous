@@ -131,9 +131,9 @@ summarize_numeric <- function(data, variables = names(data),
 
     ## setup results object
     sums <- data.frame(variable = variable.labels, group = NA, blank = "",
-                       N=NA, Missing = NA, blank_1 = "",
+                       N=NA, blank_1 = "",
                        Mean=NA, SD=NA, blank_2 = "",
-                       Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA, var = variables,
+                       Min=NA, Median=NA, Max=NA, var = variables,
                        stringsAsFactors = FALSE)
 
     if (!is.null(group)) {
@@ -265,7 +265,6 @@ prettify.summarize.numeric <- function(x,
         }
         if (count == FALSE) {
             tab$N <- NULL
-            tab$Missing <- NULL
         }
         if (mean_sd == FALSE) {
             tab$Mean <- NULL
@@ -273,9 +272,7 @@ prettify.summarize.numeric <- function(x,
         }
         if (quantiles == FALSE) {
             tab$Min <- NULL
-            tab$Q1 <- NULL
             tab$Median <- NULL
-            tab$Q3 <- NULL
             tab$Max <- NULL
         }
         if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
