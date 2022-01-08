@@ -268,18 +268,14 @@ prettify.summarize.numeric <- function(x,
         }
         if (count == FALSE) {
             tab$N <- NULL
-            tab$Missing <- NULL
         }
         if (mean_sd == FALSE) {
             tab$Mean <- NULL
             tab$SD <- NULL
         }
         if (quantiles == FALSE) {
-            tab$Min <- NULL
             tab$Q1 <- NULL
-            tab$Median <- NULL
             tab$Q3 <- NULL
-            tab$Max <- NULL
         }
         if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
             tab$blank_1 <- NULL
