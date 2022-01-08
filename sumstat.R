@@ -35,7 +35,7 @@ pacman::p_load(stargazer,xtable,Hmisc)
 summarystat=function(x,type="latex"){
   if (!require(pacman)) install.packages("pacman")
   pacman::p_load(stargazer,xtable,dplyr,tidyverse)
-  #smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = type, title="Summary Statistics",digits=2)
+  smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = "text", title="Summary Statistics",digits=2)
  summary <-
   x %>%
   # Keep numeric variables
@@ -65,6 +65,7 @@ foo <- xtable(summary, digits = 2) %>%
 corplot=function(x){
 if (!require(pacman)) install.packages("pacman")
 pacman::p_load(stargazer,xtable,corrplot)
+ x=na.omit(x)
 cor_5 <- rcorr(as.matrix(x))
 M <- cor_5$r
 p_mat <- cor_5$P
