@@ -34,10 +34,32 @@ pacman::p_load(stargazer,xtable,Hmisc)
 # Summary Statistics
 summarystat=function(x,type="latex"){
   if (!require(pacman)) install.packages("pacman")
-  pacman::p_load(stargazer,xtable)
-  smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = type, title="Summary Statistics",digits=2)
-  smsst
+  pacman::p_load(stargazer,xtable,dplyr,tidyverse)
+  #smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = type, title="Summary Statistics",digits=2)
+ summary <-
+  x %>%
+  # Keep numeric variables
+  select_if(is.numeric) %>%
+  # gather variables
+  gather(variable, value) %>%
+  # Summarize by variable
+  group_by(variable) %>%
+  # summarise all columns
+  dplyr::summarise(N = sum(!is.na(value)),
+            `Mean` = mean(value,na.rm = T),
+            `Median` = median(value,na.rm = T),
+            `SD` = sd(value,na.rm =T),
+            `Min.` = min(value,na.rm=T),
+            `Max.` = max(value,na.rm = T))
+
+
+foo <- xtable(summary, digits = 2) %>%
+  print(type = "latex",
+        html.table.attributes = "",
+        include.rownames = FALSE,
+        format.args = list(big.mark = ","))
 }
+
 
 # Correlation Plot
 corplot=function(x){
