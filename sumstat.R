@@ -69,7 +69,7 @@ pacman::p_load(stargazer,xtable,corrplot)
 cor_5 <- rcorr(as.matrix(x))
 M <- cor_5$r
 p_mat <- cor_5$P
-corrplot(cor(x), method = "color", type = "lower",addCoef.col = "black", tl.col = "darkblue", diag = FALSE,p.mat = p_mat, sig.level = 0.05, insig = "blank")
+corrplot(cor(x,use = "complete.obs"), method = "color", type = "lower",addCoef.col = "black", tl.col = "darkblue", diag = FALSE,p.mat = p_mat, sig.level = 0.05, insig = "blank")
 }
 
 
