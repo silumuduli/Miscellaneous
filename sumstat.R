@@ -48,3 +48,9 @@ M <- cor_5$r
 p_mat <- cor_5$P
 corrplot(cor(x), method = "color", type = "lower",addCoef.col = "black", tl.col = "darkblue", diag = FALSE,p.mat = p_mat, sig.level = 0.05, insig = "blank")
 }
+
+
+## Creation of Dummy Variable
+dummy=function(x,d=1,e=0){
+ifelse(x,d,e)
+}
