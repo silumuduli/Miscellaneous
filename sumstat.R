@@ -36,6 +36,6 @@ pacman::p_load(stargazer,xtable,Hmisc)
 summarystat=function(x,type="latex"){
   if (!require(pacman)) install.packages("pacman")
   pacman::p_load(stargazer,xtable)
-  smsst=stargazer(data.frame(na.omit(x)),summary.logical = T, summary.stat = c("n", "mean","median", "sd","max","min"), type = type, title="Summary Statistics",digits=2)
+  smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = type, title="Summary Statistics",digits=2)
   smsst
 }
