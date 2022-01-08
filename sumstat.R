@@ -27,8 +27,7 @@ pacman::p_load(stargazer,xtable,Hmisc)
   
   ## remove last column and return the matrix (which is now a data frame)
   Rnew <- cbind(Rnew[1:length(Rnew)-1])
-  print(xtable(Rnew))
-  return(Rnew) 
+  return(xtable(Rnew))
 }
 
 
