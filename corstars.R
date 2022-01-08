@@ -1,5 +1,9 @@
-corstars <- function(x){ 
-  require(Hmisc) 
+
+# Correlation table with starts
+corstat <- function(x){ 
+ if (!require(pacman)) install.packages("pacman")
+pacman::p_load(stargazer,xtable,Hmisc)
+  x=na.omit(x)
   x <- as.matrix(x) 
   R <- rcorr(x)$r 
   p <- rcorr(x)$P 
@@ -24,4 +28,13 @@ corstars <- function(x){
   ## remove last column and return the matrix (which is now a data frame)
   Rnew <- cbind(Rnew[1:length(Rnew)-1])
   return(Rnew) 
+}
+
+
+# Summary Statistics
+summarystat=function(x){
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(stargazer,xtable)
+smsst=stargazer(data.frame(na.omit(x)),summary.logical = T, summary.stat = c("n", "mean","median", "sd","max","min"), type = "latex", title="Summary Statistics",digits=2)
+return(smsst)
 }
