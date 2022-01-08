@@ -2,7 +2,7 @@
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
 ## define summarize
-summarize <- summarise <- function(data, type = c("numeric", "factor"),
+summstat <- function(data, type = c("numeric", "factor"),
     variables = names(data), variable.labels = labels, labels = NULL, group = NULL,
     test = !is.null(group), colnames = NULL, digits = NULL, digits.pval = 3,
     smallest.pval = 0.001, sep = NULL, sanitize = TRUE, drop = TRUE,
@@ -213,11 +213,10 @@ compute_summary.default <- function(data, group_var = NULL, group = NULL,
         data <- data[group_var == group]
     }
 
-    res <- data.frame(N=NA, Missing = NA, Mean=NA, SD=NA,
-                      Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA)
+    res <- data.frame(N=NA, Mean=NA, SD=NA,
+                      Min=NA, Median=NA, Max=NA)
 
     res["N"] <- sum(!is.na(data))
-    res["Missing"] <- sum(is.na(data))
     res["Mean"] <- round(mean(data, na.rm=TRUE), digits = digits)
     res["SD"] <- round(sd(data, na.rm=TRUE), digits = digits)
     if (incl_outliers) {
@@ -226,9 +225,7 @@ compute_summary.default <- function(data, group_var = NULL, group = NULL,
         Q <- round(c(boxplot(data, plot = FALSE)$stats), digits = digits)
     }
     res["Min"] <- Q[1]
-    res["Q1"]  <- Q[2]
     res["Median"] <- Q[3]
-    res["Q3"] <- Q[4]
     res["Max"] <- Q[5]
     return(res)
 }
@@ -237,7 +234,7 @@ compute_summary.Date <- function(data, group_var = NULL, group = NULL,
                                  incl_outliers, digits) {
     res <- compute_summary.default(unclass(data), group_var, group, incl_outliers,
                                    digits)
-    for (i in c("Mean", "Min", "Q1", "Median", "Q3", "Max"))
+    for (i in c("Mean", "Min", "Median",  "Max"))
         class(res[, i]) <- oldClass(data)
     return(res)
 }
