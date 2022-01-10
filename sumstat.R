@@ -77,3 +77,23 @@ corrplot(cor(x,use = "complete.obs"), method = "color", type = "lower",addCoef.c
 dummy=function(x,d=1,e=0){
 ifelse(x,d,e)
 }
+
+
+TS=function(x,t){
+year=as.numeric(year(t))[1]
+f=length(unique(month(t)))
+if (f==1){
+n=1
+fr=1
+}
+if (f==4){
+  n=month(t)[1]/3
+  fr=4
+}
+if (f==12){
+  n=month(t)[1]
+  fr=12
+}
+d=ts(x,start=c(year,n),frequency = fr)
+return(d)
+}
