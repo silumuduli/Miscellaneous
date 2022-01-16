@@ -183,6 +183,8 @@ print(xtable(vdt, digits=2),type)
 
 # Elastic Net
 net_lm=function(data){
+ if (!require(pacman)) install.packages("pacman")
+pacman::p_load(caret,Metrics,xtable,texreg)
 dt=na.omit(data)
 tc <- trainControl(method = "repeatedcv",
                    number = 10, repeats = 100,
