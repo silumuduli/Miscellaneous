@@ -177,3 +177,33 @@ colnames(vdt)=c("20 % Testing","One-point Validation","k-fold Validation","Boots
 rownames(vdt)=c("RMSE", "MAE","R2")
 print(xtable(vdt, digits=2),type)
 }
+
+
+
+
+# Elastic Net
+net_lm=function(data){
+dt=na.omit(data)
+tc <- trainControl(method = "repeatedcv",
+                   number = 10, repeats = 100,
+                   selectionFunction = "oneSE")
+mn <- train(y ~ .,
+            data = dt,
+            method = "glmnet", 
+            tuneGrid = expand.grid(alpha = seq(0, 1, 0.1),
+                                   lambda = seq(0, 10, 0.1)),
+            metric = "RMSE",
+            trControl = tc) 
+
+
+
+# Print the RMSE and MAE for the best model:
+print(mn$results[which(rownames(mn$results) == rownames(mn$bestTune)),])
+
+# Print the coefficients of the best model:
+print(coef(mn$finalModel, mn$bestTune$lambda, mn$bestTune$alpha))
+}
+
+
+
+
