@@ -99,7 +99,7 @@ return(d)
 }
 
 
-
+### Cross-validation of Models
 crossval_lm=function(data,type="latex"){
 if (!require(pacman)) install.packages("pacman")
 pacman::p_load(caret,Metrics,xtable,texreg)
