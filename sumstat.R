@@ -97,3 +97,83 @@ if (f==12){
 d=ts(x,start=c(year,n),frequency = fr)
 return(d)
 }
+
+
+
+crossval_lm=function(data,type="latex"){
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(caret,Metrics,xtable,texreg)
+                 
+dt=na.omit(data)
+n <- nrow(dt)
+ntest <- round(0.2*n)
+ntrain <- n - ntest
+
+train_rows <- sample(1:n, ntrain)
+dt_train <- dt[train_rows,]
+dt_test <- dt[-train_rows,]
+
+
+m <- lm(y ~ ., data = dt_train)
+rmse <- rmse(dt_test$y, predict(m, dt_test))
+mae <- mae(dt_test$y, predict(m, dt_test))
+mape=mape(dt_test$y, predict(m, dt_test))
+a1=rmse
+a2=mae
+a3=summary(m)$r.squared
+
+
+pred <- vector("numeric", nrow(mtcars))
+rsq=vector("numeric", nrow(mtcars))
+for(i in 1:nrow(dt))
+{
+  # Fit model to all observations except observation i:
+  m <- lm(y ~ ., data = dt[-i,])
+  
+  # Make a prediction for observation i:
+  pred[i] <- predict(m, dt[i,])
+  rsq[i]=summary(m)$r.squared
+}
+
+
+rmse <- rmse(dt$y, pred)
+mae <- mae(dt$y, pred)
+mape=mape(dt$y, pred)
+b1=rmse
+b2=mae
+b3=mean(rsq)
+
+
+
+
+
+tc <- trainControl(method = "repeatedcv", number = 10, repeats = 500)
+mt2 <- train(y~ .,
+           data =dt,
+           method = "lm",
+           trControl = tc)
+
+c1=as.numeric(mt2$results[2])
+c2=as.numeric(mt2$results[4])
+c3=as.numeric(mt2$results[3])
+
+
+tc <- trainControl(method = "boot",
+                   number = 999)
+mt3 <- train(y~ .,
+             data =dt,
+             method = "lm",
+             trControl = tc)
+
+d1=as.numeric(mt3$results[2])
+d2=as.numeric(mt3$results[4])
+d3=as.numeric(mt3$results[3])
+v1=c(a1,a2,a3)
+v2=c(b1,b2,b3)
+v3=c(c1,c2,c3)
+v4=c(d1,d2,d3)
+vdt=data.frame(v1, v2,v3,v4)
+colnames(vdt)=c("20 % Testing","One-point Validation","k-fold Validation","Bootstarpping")
+rownames(vdt)=c("RMSE", "MAE","R2")
+print(xtable(vdt, digits=2),type)
+}
