@@ -208,4 +208,9 @@ print(coef(mn$finalModel, mn$bestTune$lambda, mn$bestTune$alpha))
 
 
 
-
+##### Exporting to CSV
+save_csv=function(data,filename="CSVFile.csv"){
+ if (!require(pacman)) install.packages("pacman")
+ pacman::p_load(openxlsx,readxl,seasonal,dplR,BCDating,mFilter, ggplot2, utils,astsa,RColorBrewer)
+utils::write.table(data, filename,na = "",row.names =FALSE,col.names = TRUE,append = FALSE,sep = ",")
+}
