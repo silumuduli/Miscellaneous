@@ -54,7 +54,7 @@ summarystat=function(x,type="latex"){
 
 
 foo <- xtable(summary, digits = 2, caption = 'Summary Statistics') %>%
-  print(type = "latex", caption.placement = 'top',
+  print(type = type, caption.placement = 'top',
         html.table.attributes = "",
         include.rownames = FALSE,
         format.args = list(big.mark = ","))
