@@ -214,3 +214,16 @@ save_csv=function(data,filename="CSVFile.csv"){
  pacman::p_load(openxlsx,readxl,seasonal,dplR,BCDating,mFilter, ggplot2, utils,astsa,RColorBrewer)
 utils::write.table(data, filename,na = "",row.names =FALSE,col.names = TRUE,append = FALSE,sep = ",")
 }
+
+
+# Read excel
+## d=list("d1 name"=data,"d2 name"=d2)
+save_excel=function(d,filename="File.xlsx"){
+ if (!require(pacman)) install.packages("pacman")
+ pacman::p_load(openxlsx,readxl,seasonal,dplR,BCDating,mFilter, ggplot2, utils,astsa,RColorBrewer)
+openxlsx::write.xlsx(d, filename,row.names=T, append=T)
+}
+
+
+
+
