@@ -226,4 +226,14 @@ openxlsx::write.xlsx(d, filename,row.names=T, append=T)
 
 
 
+paneldata=function(data,pname,ptime){
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(openxlsx,readxl,plm)
+colnames(data)[which(colnames(data)==pname)]="Panel"
+colnames(data)[which(colnames(data)==ptime)]="Time"
+pdata= pdata.frame(data, index = c("Panel", "Time"), drop.index = TRUE)
+return(pdata)
+}
+
+
 
