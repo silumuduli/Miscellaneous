@@ -234,6 +234,31 @@ colnames(data)[which(colnames(data)==ptime)]="Time"
 pdata= plm::pdata.frame(data, index = c("Panel", "Time"), drop.index = TRUE)
 return(pdata)
 }
+## Dynamic Panel Reg
+dpreg=function(model){
+ if (!require(pacman)) install.packages("pacman")
+pacman::p_load(openxlsx,readxl,plm,texreg)
+ss=summary(model, robust =TRUE)
+coefficient.names <- rownames(ss$coefficients)  # extract coef names
+coefficients <- ss$coefficients[,1]  # extract coefficient values
+standard.errors <- ss$coefficients[,2]  # extract standard errors
+significance <- ss$coefficients[,4]  #extract p-values
+n<-  nobs(m) # extract log likelihood
+ar1 <- ss$m1$p.value  # extract AIC
+ar2 <- ss$m2$p.value  # extract BIC
+sargan <- ss$sargan$p.value  # extract number of observations
+gof <- c(n, ar1, ar2,sargan)  # create a vector of GOF statistics
+gof.names <- c("Observations", "AR(1) test p-value", "AR(2) test p-value", "Sargan test p-value")  # names of GOFs
+decimal.places <- c(FALSE, TRUE, TRUE, TRUE)  # last one is a count variable
 
+tr <- texreg::createTexreg(coef.names = coefficient.names,
+                   coef = coefficients,
+                   se = standard.errors,
+                   pvalues = significance,
+                   gof.names = gof.names,
+                   gof = gof,
+                   gof.decimal = decimal.places)
+ return(tr)
+ }
 
 
