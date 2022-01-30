@@ -234,8 +234,11 @@ colnames(data)[which(colnames(data)==ptime)]="Time"
 pdata= plm::pdata.frame(data, index = c("Panel", "Time"), drop.index = TRUE)
 return(pdata)
 }
+
+
+
 ## Dynamic Panel Reg
-dpreg=function(model){
+pgmmreg=function(model){
  if (!require(pacman)) install.packages("pacman")
 pacman::p_load(openxlsx,readxl,plm,texreg)
 ss=summary(model, robust =TRUE)
