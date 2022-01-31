@@ -246,7 +246,7 @@ coefficient.names <- rownames(ss$coefficients)  # extract coef names
 coefficients <- ss$coefficients[,1]  # extract coefficient values
 standard.errors <- ss$coefficients[,2]  # extract standard errors
 significance <- ss$coefficients[,4]  #extract p-values
-n<-  nobs(m) # extract log likelihood
+n<-  nobs(model) # extract log likelihood
 ar1 <- ss$m1$p.value  # extract AIC
 ar2 <- ss$m2$p.value  # extract BIC
 sargan <- ss$sargan$p.value  # extract number of observations
