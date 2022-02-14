@@ -264,4 +264,20 @@ tr <- texreg::createTexreg(coef.names = coefficient.names,
  return(tr)
  }
 
+################################################################
+## Xtile in R
+xtile=function(x,n,labels){
+  data=data.frame(y=x)
+  x=data$y
+  vTert = quantile(x, c(0:n/n), na.rm=T)
+  xtl = with(data, cut(x, vTert, include.lowest = T, labels=labels))
+  return(xtl)
+}
+
+# an Example
+#x=rnorm(10)
+# n=3
+# labels= c("l","m","h")
+# xtile(x,3,labels=c("l","m","h"))
+################################################################
 
