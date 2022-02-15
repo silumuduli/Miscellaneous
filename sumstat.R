@@ -281,3 +281,32 @@ xtile=function(x,n,labels){
 # xtile(x,3,labels=c("l","m","h"))
 ################################################################
 
+
+
+
+
+
+##################################################################
+# Panel xtile in R
+pxtile=function(x,by=y,n){
+df=data.frame(x=x,by=by)
+m=length(df$x)
+xtl=1:m
+fun=function(x){quantile(x, probs=1:n/n, na.rm=T)}
+dff=aggregate(df$x, by=list(df$by), FUN=fun)
+colnames(dff)[1]="by"
+dfff=merge(df, dff, by="by")
+for (i in which(is.na(dfff$x.x))){
+xtl[i]=NA
+}
+for (i in which(!is.na(dfff$x.x))){ 
+xtl[i]=min(which(as.vector(dfff[,3][i,])>=dfff$x.x[i]))
+}
+return(xtl)
+}
+
+
+# An Example
+#df <- data.frame(team=c('A', 'A', 'A', 'A', 'A', 'A', 'A', 'A','B', 'B', 'B', 'B', 'B', 'B', 'B', 'B','C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'),wins=c(2, 4, 4, 5, 7, 9, NA, 13, 15, 15, 14, 13,11, 9, 9, 8, 8, 16, 19, NA, 24, 20, 19, 18))
+#pxtile(x=df$wins,by=df$team,n=3)
+
