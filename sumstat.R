@@ -310,3 +310,9 @@ return(xtl)
 #df <- data.frame(team=c('A', 'A', 'A', 'A', 'A', 'A', 'A', 'A','B', 'B', 'B', 'B', 'B', 'B', 'B', 'B','C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'),wins=c(2, 4, 4, 5, 7, 9, NA, 13, 15, 15, 14, 13,11, 9, 9, 8, 8, 16, 19, NA, 24, 20, 19, 18))
 #pxtile(x=df$wins,by=df$team,n=3)
 
+prob=function(x,lower=1, upper=2){
+dens=density(x)
+probval=integrate(approxfun(dens), lower=lower, upper=upper)
+return(probval)
+}
+
