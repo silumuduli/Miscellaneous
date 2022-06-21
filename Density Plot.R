@@ -13,17 +13,17 @@ density_plot=function(u,v,xtitle="Inflation",name1="Before", name2="After",adj=2
   q21 <- quantile(dt[site==name2,value],ll)
   q22 <- quantile(dt[site==name2,value],ul)
   # generate the plot
-  pt=ggplot(dt,aes(x=value,fill=site, color=site))+geom_density(adjust=adj, alpha=0)+scale_color_manual(values=c("indianred3","steelblue4" ))+ 
+  pt=ggplot(dt,aes(x=value,fill=site, color=site))+geom_density(aes(color=site, fill=site),adjust=adj, alpha=0)+scale_color_manual(values=c("indianred3","dodgerblue4" ))+scale_fill_manual(values=c("indianred3","dodgerblue4" ))+ 
     geom_ribbon(data=subset(gg,site==name1 & x<q11  ),
-                aes(x=x,ymax=y,fill=name1),ymin=0, alpha=0.8, fill="steelblue4")+
+                aes(x=x,ymax=y,fill=name1),ymin=0, alpha=0.8, fill="dodgerblue4")+
     geom_ribbon(data=subset(gg,site==name1 & x>q12  ),
-                aes(x=x,ymax=y,fill=name1),ymin=0, alpha=0.8, fill="steelblue4")+
+                aes(x=x,ymax=y,fill=name1),ymin=0, alpha=0.8, fill="dodgerblue4")+
     geom_ribbon(data=subset(gg,site==name2 & x<q21  ),
                 aes(x=x,ymax=y,fill=name2),ymin=0, alpha=0.8, fill="indianred3")+
     geom_ribbon(data=subset(gg,site==name2 & x>q22),
                 aes(x=x,ymax=y,fill=name2),ymin=0, alpha=0.8, fill="indianred3")+
     geom_ribbon(data=subset(gg,site==name2 & x>max(value)),
-                aes(x=x,ymax=y,fill=name2),ymin=0, alpha=0.6)+theme_bw()
+                aes(x=x,ymax=y,fill=name2),ymin=0, alpha=0.9)+theme_bw()
   pt=pt+xlab(xtitle) + ylab("Density")
   pt=pt+theme(legend.position ="bottom",legend.title = element_blank(),axis.text = element_text(size =12))
   pt
@@ -31,14 +31,7 @@ density_plot=function(u,v,xtitle="Inflation",name1="Before", name2="After",adj=2
 
 #Note: u=series 1, v=series2, name1= before name, name2=after name, ll=lower region, ul=upper region probability.
 
-#x=rnorm(1000000)
-#y=rnorm(1000000,0.5,1.3)
+#x=rnorm(10000)
+#y=rnorm(10000,0.5,1.3)
 
 #density_plot(x,y, ll=0.01, ul=0.99)
-
-
-
-
-
-
-
