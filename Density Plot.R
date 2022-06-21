@@ -24,13 +24,6 @@ density_plot=function(u,v,xtitle="Inflation",name1="Before", name2="After",adj=2
                 aes(x=x,ymax=y,fill=name2),ymin=0, alpha=0.8, fill="indianred3")+
     geom_ribbon(data=subset(gg,site==name2 & x>max(value)),
                 aes(x=x,ymax=y,fill=name2),ymin=0, alpha=0.6)+theme_bw()
-  #+
-   # scale_color_manual(values = c(name2="brown",name1="deepskyblue3"))+scale_fill_manual(values = c(name2="brown",name1="deepskyblue3"))
-  #+annotate("text", x = -300, y = 0.004, label = paste ("Scenario 1 KF@R(0.01)=", round(q1,2)))+
-  #  annotate("text", x = -300, y = 0.0036, label = paste ("Scenario 2 KF@R(0.01)=", round(q2,2)))+
-  # annotate("text", x = -300, y = 0.0032, label = paste ("Scenario 3 KF@R(0.01)=", round(q3,2)))
-  
-  
   pt=pt+xlab(xtitle) + ylab("Density")
   pt=pt+theme(legend.position ="bottom",legend.title = element_blank(),axis.text = element_text(size =12))
   pt
