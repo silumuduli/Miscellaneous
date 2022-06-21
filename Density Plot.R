@@ -1,4 +1,6 @@
 density_plot=function(u,v,xtitle="Inflation",name1="Before", name2="After",adj=2,ll=0.05,ul=0.95){
+if (!require(pacman)) install.packages("pacman")
+  pacman::p_load(ggplot2,data.table)
   g1=u
   g2=v
   value <- c(g1, g2)
@@ -35,3 +37,5 @@ density_plot=function(u,v,xtitle="Inflation",name1="Before", name2="After",adj=2
 #y=rnorm(10000,0.5,1.3)
 
 #density_plot(x,y, ll=0.01, ul=0.99)
+
+
