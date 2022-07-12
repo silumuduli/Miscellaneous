@@ -312,7 +312,7 @@ return(xtl)
 
 prob=function(x,lower=1, upper=2){
 dens=density(x)
-probval=integrate(approxfun(dens), lower=lower, upper=upper)
+probval=integrate(approxfun(dens$x,dens$y,rule=2), lower=lower, upper=upper)
 return(probval)
 }
 
