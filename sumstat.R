@@ -374,7 +374,7 @@ breakpoint_plot=function(x,breaks){
   pacman::p_load(strucchange)
   tt=1:length(x)
   fit <- ts(loess(x ~ tt, span = 0.2)$fitted, start = c(start(x)[1],start(x)[2]), frequency =frequency(x))
-  bp.ri=strucchange::breakpoints(x ~ 1, h = 15)
+  bp.ri=strucchange::breakpoints(x ~ 1, h = 0.1)
   plot(x, type='l')
   lines(fit, col = 4)
   lines(confint(bp.ri, breaks=breaks), col ="red")
