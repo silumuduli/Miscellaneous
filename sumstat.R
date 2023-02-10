@@ -400,3 +400,22 @@ tr <- texreg::createTexreg(coef.names = coefficient.names,
  }
 
 
+
+
+spatialmodelreg2=function(model){
+ if (!require(pacman)) install.packages("pacman")
+pacman::p_load(openxlsx,readxl,plm,texreg)
+ss=summary(model)
+coefficient.names <- rownames(ss$coef_par_table) # extract coef names
+coefficients <- ss$coef_par_table[,1]  # extract coefficient values
+standard.errors <- ss$coef_par_table[,2]  # extract standard errors
+significance <- ss$coef_par_table[,4]  #extract p-values
+tr <- texreg::createTexreg(coef.names = coefficient.names,
+                   coef = coefficients,
+                   se = standard.errors,
+                   pvalues = significance)
+ return(tr)
+ }
+
+
+
