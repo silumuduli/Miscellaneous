@@ -419,3 +419,43 @@ tr <- texreg::createTexreg(coef.names = coefficient.names,
 
 
 
+## Aggregating Time Series
+
+ts_transform=function(data,year,number,freq,nfreq,fun="mean"){
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(readxl)
+
+if (fun=="mean"){
+monthly <- ts(data, start = c(year, number), frequency =freq)
+quarterly <- aggregate(monthly, nfrequency = nfreq, FUN = mean)
+return(quarterly)
+}
+
+if (fun=="sum"){
+  monthly <- ts(data, start = c(year, number), frequency =freq)
+  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN = sum)
+  return(quarterly)
+}
+
+if (fun=="sd"){
+  std_dev=function(x)(sd(na.omit(x)))
+  monthly <- ts(data, start = c(year, number), frequency =freq)
+  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN =std_dev)
+  return(quarterly)
+}
+
+if (fun=="end"){
+  end=function(x)(x[length(x)])
+  monthly <- ts(data, start = c(year, number), frequency =freq)
+  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN =end)
+  return(quarterly)
+}
+
+if (fun=="median"){
+  end=function(x)(median(na.omit(x)))
+  monthly <- ts(data, start = c(year, number), frequency =freq)
+  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN =end)
+  return(quarterly)
+}
+
+}
