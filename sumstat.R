@@ -426,14 +426,16 @@ if (!require(pacman)) install.packages("pacman")
 pacman::p_load(readxl)
 
 if (fun=="mean"){
-monthly <- ts(data, start = c(year, number), frequency =freq)
-quarterly <- aggregate(monthly, nfrequency = nfreq, FUN = mean)
-return(quarterly)
+  end=function(x)(mean(na.omit(x)))
+  monthly <- ts(data, start = c(year, number), frequency =freq)
+  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN =end)
+  return(quarterly)
 }
 
 if (fun=="sum"){
+  end=function(x)(sum(na.omit(x)))
   monthly <- ts(data, start = c(year, number), frequency =freq)
-  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN = sum)
+  quarterly <- aggregate(monthly, nfrequency = nfreq, FUN =end)
   return(quarterly)
 }
 
