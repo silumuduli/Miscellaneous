@@ -477,3 +477,14 @@ make_panel=function(dataname=data, panelname="Panel Name", variable="Variable Na
   colnames(pdata)[which(colnames(pdata)=="variable")]=c("Time")
   return(pdata)
 }
+
+
+
+## Frequency Distribution
+count=function(z){
+d1=transform(table(z))
+d2=transform(round(prop.table(table(z))*100,digits=1))
+dff=cbind(d1,d2[2])
+colnames(dff)=c("Variable","Freq","Percentage")
+return(dff)
+ }
