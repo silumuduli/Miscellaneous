@@ -481,7 +481,7 @@ make_panel=function(dataname=data, panelname="Panel Name", variable="Variable Na
 
 
 ## Frequency Distribution
-count=function(z){
+count_f=function(z){
 d1=transform(table(z))
 d2=transform(round(prop.table(table(z))*100,digits=1))
 dff=cbind(d1,d2[2])
