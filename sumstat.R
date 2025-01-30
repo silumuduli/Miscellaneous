@@ -281,7 +281,29 @@ xtile=function(x,n,labels){
 # xtile(x,3,labels=c("l","m","h"))
 ################################################################
 
-
+cluster_reg=function(model,cluster.var){
+  if (!require(pacman)) install.packages("pacman")
+  pacman::p_load(openxlsx,readxl,texreg,clubSandwich)
+  clmodel=coef_test(model, vcov = "CR1", cluster=cluster.var)
+  coefficient.names <- rownames(m4_cl)  # extract coef names
+  coefficients <- clmodel[,2]  # extract coefficient values
+  standard.errors <- clmodel[,3]  # extract standard errors
+  significance <- clmodel[,6]  #extract p-values
+  n<-  nobs(model) # extract log likelihood
+  r2=summary(model)$r.squared
+  gof <- c(n, r2)  # create a vector of GOF statistics
+  gof.names <- c("Observations", "R2")  # names of GOFs
+  decimal.places <- c(FALSE, TRUE)  # last one is a count variable
+  
+  tr <- texreg::createTexreg(coef.names = coefficient.names,
+                             coef = coefficients,
+                             se = standard.errors,
+                             pvalues = significance,
+                             gof.names = gof.names,
+                             gof = gof,
+                             gof.decimal = decimal.places)
+  return(tr)
+}
 
 
 
