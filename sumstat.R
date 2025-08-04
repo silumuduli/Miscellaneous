@@ -510,3 +510,13 @@ dff=cbind(d1,d2[2])
 colnames(dff)=c("Variable","Freq","Percentage")
 return(dff)
  }
+
+
+#### CODES FOR GENERATING RANDOM WEIGHTS
+# Set the number of values
+n <- 10
+
+random_points <- sort(runif(n - 1, 0, 1)) # Generate n-1 random numbers between 0 and 1
+random_points <- unique(c(0, random_points, 1))
+random_values <- diff(random_points) # Compute the differences to get the random numbers that sum to 1
+random_values
