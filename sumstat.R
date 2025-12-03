@@ -1,35 +1,71 @@
 
 # Correlation table with starts
-corstat <- function(x){ 
- if (!require(pacman)) install.packages("pacman")
-pacman::p_load(stargazer,xtable,Hmisc)
-  x=na.omit(x)
-  x <- as.matrix(x) 
-  R <- rcorr(x)$r 
-  p <- rcorr(x)$P 
+corstat <- function(df, var_list, type = "latex", file_out = "correlation_table.tex") {
   
-  ## define notions for significance levels; spacing is important.
-  mystars <- ifelse(p < .01, "***", ifelse(p < .05, "** ", ifelse(p < .1, "* ", " ")))
+  # Load required packages
+  if (!require(dplyr))    install.packages("dplyr")
+  if (!require(Hmisc))    install.packages("Hmisc")
+  if (!require(stargazer)) install.packages("stargazer")
   
-  ## trunctuate the matrix that holds the correlations to two decimal
-  R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1] 
+  library(dplyr)
+  library(Hmisc)
+  library(stargazer)
   
-  ## build a new matrix that includes the correlations with their apropriate stars 
-  Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x)) 
-  diag(Rnew) <- paste(diag(R), " ", sep="") 
-  rownames(Rnew) <- colnames(x) 
-  colnames(Rnew) <- paste(colnames(x), "", sep="") 
+  # Subset and clean data
+  data <- df %>% 
+    select(all_of(var_list)) %>%
+    na.omit() %>%
+    as.data.frame()
   
-  ## remove upper triangle
-  Rnew <- as.matrix(Rnew)
-  Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
-  Rnew <- as.data.frame(Rnew) 
+  # Compute correlation and p-values
+  corr_result <- rcorr(as.matrix(data), type = "pearson")
+  R <- corr_result$r
+  p <- corr_result$P
   
-  ## remove last column and return the matrix (which is now a data frame)
-  Rnew <- cbind(Rnew[1:length(Rnew)-1])
-  return(Rnew)
+  # Add significance stars
+  stars <- ifelse(p < 0.01, "***",
+                  ifelse(p < 0.05, "**",
+                         ifelse(p < 0.10, "*", "")))
+  
+  # Combine correlation + stars, round to 1 decimal
+  R_display <- matrix(paste0(format(round(R, 1), nsmall = 1), stars), 
+                      nrow = nrow(R), ncol = ncol(R))
+  diag(R_display) <- paste0(format(round(diag(R), 1), nsmall = 1), "   ")  # 1.0 on diagonal
+  rownames(R_display) <- colnames(data)
+  colnames(R_display) <- colnames(data)
+  
+  # Remove upper triangle (optional: keep full or lower only)
+  R_display[upper.tri(R_display)] <- ""
+  
+  # Convert to data frame
+  corr_df <- as.data.frame(R_display) %>%
+    rownames_to_column("Variable")
+  
+  # Print clean version in console
+  cat("\nCorrelation Matrix (1 decimal + significance):\n")
+  print(corr_df, row.names = FALSE)
+  
+  # Export with stargazer (BEAUTIFUL LaTeX table)
+  stargazer(R_display,
+            type = type,
+            summary = FALSE,
+            title = "Correlation Matrix with Significance Levels",
+            notes = c("*** p<0.01, ** p<0.05, * p<0.10",
+                      "Lower triangle shown; diagonal = 1.0"),
+            notes.align = "l",
+            out = if(type == "latex") file_out else NULL,
+            digits = 1,
+            digit.separator = "",
+            rownames = TRUE,
+            colnames = TRUE)
+  
+  if (type == "latex") {
+    cat(paste0("\nLaTeX correlation table saved as: ", file_out, "\n"))
+  }
+  
+  # Return the clean data frame (optional use)
+  invisible(corr_df)
 }
-
 
 # Summary Statistics
 summarystat <- function(df, var_list, type = "latex") {
