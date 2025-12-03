@@ -1,7 +1,5 @@
-
-# Correlation table with starts
+##Correlation Matrix
 corstat <- function(df, var_list, type = "latex", file_out = "correlation_table.tex") {
-  
   # Load required packages
   if (!require(dplyr))    install.packages("dplyr")
   if (!require(Hmisc))    install.packages("Hmisc")
@@ -38,32 +36,32 @@ corstat <- function(df, var_list, type = "latex", file_out = "correlation_table.
   R_display[upper.tri(R_display)] <- ""
   
   # Convert to data frame
-  corr_df <- as.data.frame(R_display
-  
-  # Print clean version in console
-  cat("\nCorrelation Matrix (1 decimal + significance):\n")
-  print(corr_df, row.names = FALSE)
-  
-  # Export with stargazer (BEAUTIFUL LaTeX table)
-  stargazer(R_display,
-            type = type,
-            summary = FALSE,
-            title = "Correlation Matrix with Significance Levels",
-            notes = c("*** p<0.01, ** p<0.05, * p<0.10",
-                      "Lower triangle shown; diagonal = 1.0"),
-            notes.align = "l",
-            out = if(type == "latex") file_out else NULL,
-            digits = 1,
-            digit.separator = "",
-            rownames = TRUE,
-            colnames = TRUE)
-  
-  if (type == "latex") {
-    cat(paste0("\nLaTeX correlation table saved as: ", file_out, "\n"))
-  }
-  
-  # Return the clean data frame (optional use)
-  invisible(corr_df)
+  corr_df <- as.data.frame(R_display)
+                           
+                    # Print clean version in console
+                           cat("\nCorrelation Matrix (1 decimal + significance):\n")
+                           print(corr_df, row.names = FALSE)
+                           
+                           # Export with stargazer (BEAUTIFUL LaTeX table)
+                           stargazer(corr_df,
+                                     type = type,
+                                     summary = FALSE,
+                                     title = "Correlation Matrix with Significance Levels",
+                                     notes = c("*** p<0.01, ** p<0.05, * p<0.10",
+                                               "Lower triangle shown; diagonal = 1.0"),
+                                     notes.align = "l",
+                                     out = if(type == "latex") file_out else NULL,
+                                     digits = 1,
+                                     digit.separator = "",
+                                     rownames = TRUE,
+                                     colnames = TRUE)
+                           
+                           if (type == "latex") {
+                             cat(paste0("\nLaTeX correlation table saved as: ", file_out, "\n"))
+                           }
+                           
+                           # Return the clean data frame (optional use)
+                           invisible(corr_df)
 }
 
 # Summary Statistics
