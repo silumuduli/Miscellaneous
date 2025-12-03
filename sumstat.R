@@ -9,7 +9,7 @@ pacman::p_load(stargazer,xtable,Hmisc)
   p <- rcorr(x)$P 
   
   ## define notions for significance levels; spacing is important.
-  mystars <- ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "* ", " ")))
+  mystars <- ifelse(p < .01, "***", ifelse(p < .05, "** ", ifelse(p < .1, "* ", " ")))
   
   ## trunctuate the matrix that holds the correlations to two decimal
   R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1] 
@@ -32,33 +32,64 @@ pacman::p_load(stargazer,xtable,Hmisc)
 
 
 # Summary Statistics
-summarystat=function(x,type="latex"){
-  if (!require(pacman)) install.packages("pacman")
-  pacman::p_load(stargazer,xtable,dplyr,tidyverse)
-  smsst=stargazer(data.frame(na.omit(x)), summary.stat = c("n", "mean","median", "sd","max","min"), type = "text", title="Summary Statistics",digits=2)
- summary <-
-  x %>%
-  # Keep numeric variables
-  select_if(is.numeric) %>%
-  # gather variables
-  gather(variable, value) %>%
-  # Summarize by variable
-  group_by(variable) %>%
-  # summarise all columns
-  dplyr::summarise(N = sum(!is.na(value)),
-            `Mean` = mean(value,na.rm = T),
-            `Median` = median(value,na.rm = T),
-            `SD` = sd(value,na.rm =T),
-            `Min.` = min(value,na.rm=T),
-            `Max.` = max(value,na.rm = T))
-
-
-foo <- xtable(summary, digits = 2, caption = 'Summary Statistics') %>%
-  print(type = type, caption.placement = 'top',
-        html.table.attributes = "",
-        include.rownames = FALSE,
-        format.args = list(big.mark = ","))
+summarystat <- function(df, var_list, type = "latex") {
+  
+  # Load required packages
+  if (!require(dplyr))    stop("Please install dplyr")
+  if (!require(stargazer)) stop("Please install stargazer")
+  
+  library(dplyr)
+  library(stargazer)
+  
+  # Validate variables exist
+  missing_vars <- var_list[!var_list %in% names(df)]
+  if (length(missing_vars) > 0) {
+    stop("These variables are not in the data: ", paste(missing_vars, collapse = ", "))
+  }
+  
+  # Subset data
+  df_subset <- df %>% 
+    select(all_of(var_list)) %>%
+    ungroup() %>%
+    as.data.frame()
+  
+  # Create summary_df with explicit calculations and 1 decimal
+  summary_df <- data.frame(
+    Variable = names(df_subset),
+    N        = sapply(df_subset, function(x) sum(!is.na(x))),
+    Mean     = sapply(df_subset, function(x) round(mean(x, na.rm = TRUE), 1)),
+    SD       = sapply(df_subset, function(x) round(sd(x, na.rm = TRUE), 1)),
+    Min      = sapply(df_subset, function(x) round(min(x, na.rm = TRUE), 1)),
+    Median   = sapply(df_subset, function(x) round(median(x, na.rm = TRUE), 1)),
+    Max      = sapply(df_subset, function(x) round(max(x, na.rm = TRUE), 1)),
+    stringsAsFactors = FALSE
+  )
+  
+  # Print the summary_df
+  cat("\n=== Summary Statistics (1 decimal place) ===\n")
+  print(summary_df, row.names = FALSE)
+  
+  # Run stargazer
+  stargazer(df_subset,
+            type = type,
+            digits = 1,
+            summary.stat = c("n", "mean", "sd", "min", "median", "max"),
+            title = "Summary Statistics",
+            notes = "All values rounded to one decimal place (except N).",
+            header = FALSE,
+            out = if(type == "latex") "summary_table.tex" else NULL)
+  
+  # Final message
+  if (type == "latex") {
+    cat("\nLaTeX table saved as: summary_table.tex\n")
+  } else {
+    cat("\nStargazer output shown above (type =", type, ")\n")
+  }
+  
+  # Return the summary_df invisibly (so you can assign it)
+  invisible(summary_df)
 }
+
 
 
 # Correlation Plot
