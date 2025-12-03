@@ -38,8 +38,7 @@ corstat <- function(df, var_list, type = "latex", file_out = "correlation_table.
   R_display[upper.tri(R_display)] <- ""
   
   # Convert to data frame
-  corr_df <- as.data.frame(R_display) %>%
-    rownames_to_column("Variable")
+  corr_df <- as.data.frame(R_display
   
   # Print clean version in console
   cat("\nCorrelation Matrix (1 decimal + significance):\n")
