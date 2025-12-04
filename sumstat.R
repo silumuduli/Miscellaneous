@@ -620,19 +620,6 @@ panel_unit_root <- function(df,               # your data frame (already cleaned
     )
   }) %>% bind_rows()
   
-  # 3. Pretty variable names (customize as needed)
-  results <- results %>%
-    mutate(Variable = case_when(
-      Variable == "CoD"               ~ "Cost of Deposits (CoD)",
-      Variable == "CoF"               ~ "Cost of Funds (CoF)",
-      Variable == "Return_on_Advances"~ "Return on Advances",
-      Variable == "NIM"               ~ "Net Interest Margin (NIM)",
-      Variable == "Cred_g"            ~ "Credit Growth",
-      Variable == "CD_ratio"          ~ "Credit–Deposit Ratio",
-      Variable == "CRAR"              ~ "Capital Adequacy Ratio (CRAR)",
-      Variable == "NetNPA"            ~ "Net NPA Ratio",
-      TRUE                            ~ Variable
-    ))
   
   # 4. Export with stargazer
   stargazer(results,
