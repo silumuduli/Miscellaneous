@@ -576,3 +576,82 @@ random_points <- sort(runif(n - 1, 0, 1)) # Generate n-1 random numbers between 
 random_points <- unique(c(0, random_points, 1))
 weights <- diff(random_points) # Compute the differences to get the random numbers that sum to 1
 weights
+
+panel_unit_root <- function(df,               # your data frame (already cleaned)
+                                var_list,         # vector of variable names (as strings)
+                                index = c("Bank", "Year"),   # change if needed
+                                lags = "AIC",     # or fixed number, e.g. 4
+                                pmax = 2,         # max lags
+                                type = "latex",    # "html" (for Word), "latex", or "text"
+                                file_out = "CIPS_Unit_Root_Results.tex",
+                                title = "Panel Unit Root Tests – Pesaran (2007) CIPS") {
+  
+  if (!require(pacman)) install.packages("pacman")
+  pacman::p_load(plm,dplyr,stargazer)
+  # 1. Convert to pdata.frame
+  panel_data <- pdata.frame(df, index = index)
+  
+  # 2. Run CIPS test for each variable
+  results <- lapply(var_list, function(v) {
+    test <- purtest(reformulate("1", response = v),
+                    data = panel_data,
+                    test = "ips",
+                    exo = "intercept",
+                    lags = lags,
+                    pmax = pmax,
+                    test.type = "cips")
+    
+    stat <- round(test$statistic$statistic, 3)
+    pval <- round(test$statistic$p.value, 4)
+    
+    # Stars (Pesaran 2007, no trend)
+    stars <- ifelse(stat <= -2.66, "***",
+                    ifelse(stat <= -2.44, "**",
+                           ifelse(stat <= -2.33, "*", "")))
+    
+    order <- ifelse(stat <= -2.33, "I(0)", "I(1)")
+    
+    data.frame(
+      Variable = v,
+      p_value = pval,
+      Significance = stars,
+      Order = order,
+      stringsAsFactors = FALSE
+    )
+  }) %>% bind_rows()
+  
+  # 3. Pretty variable names (customize as needed)
+  results <- results %>%
+    mutate(Variable = case_when(
+      Variable == "CoD"               ~ "Cost of Deposits (CoD)",
+      Variable == "CoF"               ~ "Cost of Funds (CoF)",
+      Variable == "Return_on_Advances"~ "Return on Advances",
+      Variable == "NIM"               ~ "Net Interest Margin (NIM)",
+      Variable == "Cred_g"            ~ "Credit Growth",
+      Variable == "CD_ratio"          ~ "Credit–Deposit Ratio",
+      Variable == "CRAR"              ~ "Capital Adequacy Ratio (CRAR)",
+      Variable == "NetNPA"            ~ "Net NPA Ratio",
+      TRUE                            ~ Variable
+    ))
+  
+  # 4. Export with stargazer
+  stargazer(results,
+            type = type,
+            summary = FALSE,
+            rownames = FALSE,
+            digits = 3,
+            title = title,
+            notes = c("***, **, * indicate rejection at 1%, 5%, 10%.",
+                      "Critical values (no trend): −2.66 (1%), −2.44 (5%), −2.33 (10%).",
+                      paste("Lag order:", lags, "(max =", pmax, "lags).")),
+            notes.align = "l",
+            notes.append = FALSE,
+            out = file_out)
+  
+  # 5. Also return the data frame + print to console
+  cat("\n=== CIPS Unit Root Test Results ===\n")
+  print(results, row.names = FALSE)
+  
+  invisible(results)  # returns silently
+}
+
