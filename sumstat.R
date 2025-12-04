@@ -582,6 +582,7 @@ panel_unit_root <- function(df,               # your data frame (already cleaned
                                 index = c("Bank", "Year"),   # change if needed
                                 lags = "AIC",     # or fixed number, e.g. 4
                                 pmax = 2,         # max lags
+                                exo="trend",      #"none", "intercept", "trend"
                                 type = "latex",    # "html" (for Word), "latex", or "text"
                                 file_out = "CIPS_Unit_Root_Results.tex",
                                 title = "Panel Unit Root Tests – Pesaran (2007) CIPS") {
