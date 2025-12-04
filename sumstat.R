@@ -50,7 +50,7 @@ corstat <- function(df, var_list, type = "latex", file_out = "correlation_table.
                                      notes = c("*** p<0.01, ** p<0.05, * p<0.10",
                                                "Lower triangle shown; diagonal = 1.0"),
                                      notes.align = "l",
-                                     out = if(type == "latex") file_out else NULL,
+                                     out = file_out,
                                      digits = 1,
                                      digit.separator = "",
                                      rownames = TRUE,
@@ -65,7 +65,7 @@ corstat <- function(df, var_list, type = "latex", file_out = "correlation_table.
 }
 
 # Summary Statistics
-summarystat <- function(df, var_list, type = "latex") {
+summarystat <- function(df, var_list, type = "latex", file_out="Summary_Stat.tex") {
   
   # Load required packages
   if (!require(dplyr))    stop("Please install dplyr")
@@ -110,7 +110,7 @@ summarystat <- function(df, var_list, type = "latex") {
             title = "Summary Statistics",
             notes = "All values rounded to one decimal place (except N).",
             header = FALSE,
-            out = if(type == "latex") "summary_table.tex" else NULL)
+            out = file_out
   
   # Final message
   if (type == "latex") {
