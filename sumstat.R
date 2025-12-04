@@ -110,15 +110,7 @@ summarystat <- function(df, var_list, type = "latex", file_out="Summary_Stat.tex
             title = "Summary Statistics",
             notes = "All values rounded to one decimal place (except N).",
             header = FALSE,
-            out = file_out
-  
-  # Final message
-  if (type == "latex") {
-    cat("\nLaTeX table saved as: summary_table.tex\n")
-  } else {
-    cat("\nStargazer output shown above (type =", type, ")\n")
-  }
-  
+            out = file_out)
   # Return the summary_df invisibly (so you can assign it)
   invisible(summary_df)
 }
