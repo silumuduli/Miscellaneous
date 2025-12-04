@@ -597,7 +597,7 @@ panel_unit_root <- function(df,               # your data frame (already cleaned
     test <- purtest(reformulate("1", response = v),
                     data = panel_data,
                     test = "ips",
-                    exo = "intercept",
+                    exo = exo,
                     lags = lags,
                     pmax = pmax,
                     test.type = "cips")
