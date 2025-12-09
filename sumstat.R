@@ -643,3 +643,47 @@ panel_unit_root <- function(df,               # your data frame (already cleaned
   invisible(results)  # returns silently
 }
 
+
+
+## NARDL Model
+nardl_sr_texreg=function(nardl_model){
+  if (!require(pacman)) install.packages("pacman")
+  pacman::p_load(openxlsx,readxl,plm,texreg)
+  model=nardl_model$sels$coefficients
+  coefficient.names <- rownames(model) # extract coef names
+  coefficients <- model[,1] # extract coefficient values
+  standard.errors <- model[,2]  # extract standard errors
+  significance <- model[,4]  #extract p-values
+  gof <- c(nardl_model$Nobs, nardl_model$wldsr[,2],nardl_model$sels$adj.r.squared)  # create a vector of GOF statistics
+  gof.names <- c("Observations", "Short-run Asymmetric Test p-value","Adj R2")  # names of GOFs
+  decimal.places <- c(FALSE, TRUE,TRUE)  # last one is a count variable
+  tr <- texreg::createTexreg(coef.names = coefficient.names,
+                             coef = coefficients,
+                             se = standard.errors,
+                             pvalues = significance,
+                             gof.names = gof.names,
+                             gof = gof,
+                             gof.decimal = decimal.places)
+  return(tr)
+}
+
+nardl_lr_texreg=function(nardl_model){
+  if (!require(pacman)) install.packages("pacman")
+  pacman::p_load(openxlsx,readxl,plm,texreg)
+  model=nardl_model$lres
+  coefficient.names <- rownames(model) # extract coef names
+  coefficients <- model[,1] # extract coefficient values
+  standard.errors <- model[,2]  # extract standard errors
+  significance <- model[,4]  #extract p-values
+  gof <- c(nardl_model$Nobs, nardl_model$wldq[,2])  # create a vector of GOF statistics
+  gof.names <- c("Observations", "Long-run Asymmetric Test p-value")  # names of GOFs
+  decimal.places <- c(FALSE, TRUE)  # last one is a count variable
+  tr <- texreg::createTexreg(coef.names = coefficient.names,
+                             coef = coefficients,
+                             se = standard.errors,
+                             pvalues = significance,
+                             gof.names = gof.names,
+                             gof = gof,
+                             gof.decimal = decimal.places)
+  return(tr)
+}
