@@ -667,6 +667,7 @@ nardl_sr_texreg=function(nardl_model){
   return(tr)
 }
 
+
 nardl_lr_texreg=function(nardl_model){
   if (!require(pacman)) install.packages("pacman")
   pacman::p_load(openxlsx,readxl,plm,texreg)
@@ -675,9 +676,9 @@ nardl_lr_texreg=function(nardl_model){
   coefficients <- model[,1] # extract coefficient values
   standard.errors <- model[,2]  # extract standard errors
   significance <- model[,4]  #extract p-values
-  gof <- c(nardl_model$Nobs, nardl_model$wldq[,2])  # create a vector of GOF statistics
-  gof.names <- c("Observations", "Long-run Asymmetric Test p-value")  # names of GOFs
-  decimal.places <- c(FALSE, TRUE)  # last one is a count variable
+  gof <- c(nardl_model$Nobs, nardl_model$wldq[,2],nardl_model$fstat)  # create a vector of GOF statistics
+  gof.names <- c("Observations", "Long-run Asymmetric Test p-value","Bound Test F-statistic")  # names of GOFs
+  decimal.places <- c(FALSE, TRUE,TRUE)  # last one is a count variable
   tr <- texreg::createTexreg(coef.names = coefficient.names,
                              coef = coefficients,
                              se = standard.errors,
